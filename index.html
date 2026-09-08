@@ -6,27 +6,35 @@
 <title>Workers Attendance</title>
 
 <style>
+*{
+    box-sizing:border-box;
+}
+
 body{
     font-family:Arial,sans-serif;
     background:#f4f6f8;
     margin:0;
     padding:15px;
 }
+
 .container{
-    max-width:650px;
+    max-width:700px;
     margin:auto;
     background:white;
     padding:20px;
     border-radius:15px;
     box-shadow:0 3px 12px #ccc;
 }
+
 h1,h2{
     text-align:center;
 }
+
 .subtitle{
     text-align:center;
     color:#666;
 }
+
 button{
     width:100%;
     padding:13px;
@@ -34,35 +42,34 @@ button{
     border:0;
     border-radius:8px;
     font-size:16px;
+    cursor:pointer;
 }
+
 .contractor{
     background:#1976d2;
     color:white;
 }
+
 .worker{
     background:#2e7d32;
     color:white;
 }
+
 .dark{
     background:#333;
     color:white;
 }
+
 .red{
     background:#d32f2f;
     color:white;
 }
-input{
-    width:100%;
-    box-sizing:border-box;
-    padding:12px;
-    margin:6px 0;
-    border:1px solid #bbb;
-    border-radius:7px;
-    font-size:16px;
+
+.green{
+    background:#2e7d32;
+    color:white;
 }
-.login-box,.dashboard{
-    display:none;
-}
+
 .card{
     background:#f8f9fa;
     padding:15px;
@@ -70,45 +77,86 @@ input{
     border-radius:10px;
     border:1px solid #ddd;
 }
+
+input{
+    width:100%;
+    padding:12px;
+    margin:6px 0;
+    border:1px solid #bbb;
+    border-radius:7px;
+    font-size:16px;
+}
+
+.login-box,
+.dashboard{
+    display:none;
+}
+
+.message{
+    text-align:center;
+    font-weight:bold;
+    margin:10px 0;
+}
+
 .summary{
     background:#e3f2fd;
     padding:15px;
     border-radius:10px;
     margin:10px 0;
 }
+
+.worker-card{
+    background:#f8f9fa;
+    padding:15px;
+    margin:10px 0;
+    border-radius:10px;
+    border:1px solid #ddd;
+}
+
 .present{
     background:#2e7d32;
     color:white;
 }
+
 .absent{
-    background:#777;
-    color:white;
-}
-.delete{
     background:#d32f2f;
     color:white;
 }
-.history{
-    overflow-x:auto;
+
+.small{
+    font-size:14px;
+    color:#555;
 }
+
 table{
     width:100%;
     border-collapse:collapse;
     margin-top:10px;
 }
+
 th,td{
-    border:1px solid #ccc;
-    padding:9px;
+    border:1px solid #ddd;
+    padding:8px;
     text-align:center;
+    font-size:14px;
 }
+
 th{
-    background:#1976d2;
-    color:white;
+    background:#eeeeee;
 }
-.message{
-    text-align:center;
-    font-weight:bold;
-    margin:10px;
+
+hr{
+    border:0;
+    border-top:1px solid #ddd;
+    margin:18px 0;
+}
+
+.success{
+    color:#2e7d32;
+}
+
+.danger{
+    color:#d32f2f;
 }
 </style>
 </head>
@@ -118,9 +166,14 @@ th{
 <div class="container">
 
 <h1>Workers Attendance</h1>
-<p class="subtitle">Worker Attendance और Payment Management</p>
 
+<p class="subtitle">
+Worker Attendance और Payment Management
+</p>
+
+<!-- HOME -->
 <div id="home">
+
     <button class="contractor" onclick="showLogin('contractor')">
         Contractor Login
     </button>
@@ -128,641 +181,1212 @@ th{
     <button class="worker" onclick="showLogin('worker')">
         Worker Login
     </button>
+
 </div>
 
+
+<!-- CONTRACTOR LOGIN -->
 <div id="contractorLogin" class="login-box">
 
-<h2>Contractor Login</h2>
+    <h2>Contractor Login</h2>
 
-<input id="contractorUser" type="text"
-placeholder="Contractor Username">
+    <input
+        id="contractorUser"
+        type="text"
+        placeholder="Username"
+    >
 
-<input id="contractorPass" type="password"
-placeholder="Password">
+    <input
+        id="contractorPass"
+        type="password"
+        placeholder="Password"
+    >
 
-<button class="contractor" onclick="contractorLogin()">
-Login
-</button>
+    <button class="contractor" onclick="contractorLogin()">
+        Login
+    </button>
 
-<button class="dark" onclick="goHome()">
-Back
-</button>
+    <button class="dark" onclick="goHome()">
+        Back
+    </button>
 
 </div>
 
+
+<!-- WORKER LOGIN -->
 <div id="workerLogin" class="login-box">
 
-<h2>Worker Login</h2>
+    <h2>Worker Login</h2>
 
-<input id="workerUser" type="text"
-placeholder="Worker ID">
+    <input
+        id="workerUser"
+        type="text"
+        placeholder="Worker Name या Mobile"
+    >
 
-<input id="workerPass" type="password"
-placeholder="Password">
+    <input
+        id="workerPass"
+        type="password"
+        placeholder="Password"
+    >
 
-<button class="worker" onclick="workerLogin()">
-Login
-</button>
+    <button class="worker" onclick="workerLogin()">
+        Login
+    </button>
 
-<button class="dark" onclick="goHome()">
-Back
-</button>
+    <button class="dark" onclick="goHome()">
+        Back
+    </button>
 
 </div>
+
 
 <div id="message" class="message"></div>
 
-<div id="dashboard" class="dashboard">
 
-<h2>🏗️ Contractor Dashboard</h2>
+<!-- CONTRACTOR DASHBOARD -->
+<div id="contractorDashboard" class="dashboard">
 
-<div class="summary">
-<b>आज की तारीख:</b>
-<span id="today"></span>
+    <h2>👷 Contractor Dashboard</h2>
+
+    <div class="summary">
+
+        <b>आज की तारीख:</b>
+        <span id="today"></span>
+
+        <hr>
+
+        <b>Total Workers:</b>
+        <span id="totalWorkers">0</span>
+
+        <br><br>
+
+        <b>आज Present:</b>
+        <span id="todayPresent">0</span>
+
+        <br><br>
+
+        <b>इस महीने की Attendance:</b>
+        <span id="monthAttendance">0</span>
+
+        <br><br>
+
+        <b>कुल Payment:</b>
+        ₹<span id="totalPayment">0</span>
+
+    </div>
+
+
+    <!-- ADD WORKER -->
+    <div class="card">
+
+        <h3>➕ Worker Add करें</h3>
+
+        <input
+            id="workerName"
+            type="text"
+            placeholder="Worker Name"
+        >
+
+        <input
+            id="workerPhone"
+            type="text"
+            placeholder="Mobile Number"
+        >
+
+        <input
+            id="workerWage"
+            type="number"
+            placeholder="Daily Wage ₹"
+        >
+
+        <input
+            id="workerPassword"
+            type="password"
+            placeholder="Worker Password"
+        >
+
+        <button class="green" onclick="addWorker()">
+            Add Worker
+        </button>
+
+        <p class="small">
+            Worker Login के लिए यही Name/Mobile और Password इस्तेमाल होगा।
+        </p>
+
+    </div>
+
+
+    <!-- WORKER LIST -->
+    <h3>👷 Worker List</h3>
+
+    <div id="workerList"></div>
+
+
+    <!-- ATTENDANCE HISTORY -->
+    <div class="card">
+
+        <h3>📜 Attendance History</h3>
+
+        <div style="overflow-x:auto">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Worker</th>
+                        <th>Status</th>
+                        <th>Payment</th>
+                    </tr>
+                </thead>
+
+                <tbody id="historyList"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- MONTHLY PAYMENT -->
+    <div class="card">
+
+        <h3>💰 Worker-wise Monthly Payment</h3>
+
+        <div id="monthlyWorkers"></div>
+
+    </div>
+
+
+    <button class="dark" onclick="contractorLogout()">
+        Logout
+    </button>
+
 </div>
 
-<h3>➕ Worker Add करें</h3>
 
-<input id="workerName" type="text"
-placeholder="Worker का नाम">
+<!-- WORKER DASHBOARD -->
+<div id="workerDashboard" class="dashboard">
 
-<input id="workerPhone" type="text"
-placeholder="Mobile Number">
+    <h2>👷 Worker Dashboard</h2>
 
-<input id="workerWage" type="number"
-placeholder="Daily Wage ₹">
+    <div class="card">
 
-<button class="contractor" onclick="addWorker()">
-Add Worker
-</button>
+        <p>
+            <b>Worker Name:</b>
+            <span id="workerDashName"></span>
+        </p>
 
-<h3>👷 Worker List</h3>
+        <p>
+            <b>Mobile:</b>
+            <span id="workerDashPhone"></span>
+        </p>
 
-<div id="workerList"></div>
+        <p>
+            <b>Daily Wage:</b>
+            ₹<span id="workerDashWage"></span>
+        </p>
 
-<h3>💰 Payment Summary</h3>
+    </div>
 
-<div class="summary">
-<p>Total Workers: <b id="totalWorkers">0</b></p>
-<p>आज Present: <b id="todayPresent">0</b></p>
-<p>इस महीने की Attendance: <b id="monthAttendance">0</b></p>
-<p>कुल Payment: <b>₹<span id="totalPayment">0</span></b></p>
+
+    <div class="summary">
+
+        <h3>📅 इस महीने की Attendance</h3>
+
+        <p>
+            <b>
+                <span id="workerDashDays">0</span> दिन Present
+            </b>
+        </p>
+
+        <h3>💰 इस महीने की Payment</h3>
+
+        <p>
+            <b>
+                ₹<span id="workerDashPayment">0</span>
+            </b>
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <h3>📜 मेरी Attendance History</h3>
+
+        <div style="overflow-x:auto">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Payment</th>
+                    </tr>
+                </thead>
+
+                <tbody id="workerHistory"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <button class="dark" onclick="workerLogout()">
+        Logout
+    </button>
+
 </div>
 
-<h3>📅 Attendance History</h3>
-
-<div class="history">
-<table>
-<thead>
-<tr>
-<th>तारीख</th>
-<th>Worker</th>
-<th>स्थिति</th>
-<th>Payment</th>
-</tr>
-</thead>
-<tbody id="historyList"></tbody>
-</table>
 </div>
 
-<h3>💵 Worker-wise Monthly Payment</h3>
-
-<div id="monthlyWorkers"></div>
-
-<button class="red" onclick="logout()">
-Logout
-</button>
-
-</div>
-
-</div>
 
 <script>
 
-let workers =
-JSON.parse(localStorage.getItem("workers")) || [];
+/* =========================
+   DATA
+========================= */
 
-let attendance =
-JSON.parse(localStorage.getItem("attendance")) || {};
+let workers = JSON.parse(
+    localStorage.getItem("workers")
+) || [];
 
-function saveData(){
-    localStorage.setItem("workers",
-        JSON.stringify(workers));
+let attendance = JSON.parse(
+    localStorage.getItem("attendance")
+) || {};
 
-    localStorage.setItem("attendance",
-        JSON.stringify(attendance));
-}
+
+/* =========================
+   DATE
+========================= */
 
 function getToday(){
 
-    let d=new Date();
+    let d = new Date();
 
-    let year=d.getFullYear();
-    let month=String(d.getMonth()+1).padStart(2,"0");
-    let day=String(d.getDate()).padStart(2,"0");
+    let year = d.getFullYear();
 
-    return year+"-"+month+"-"+day;
+    let month = String(
+        d.getMonth() + 1
+    ).padStart(2,"0");
+
+    let day = String(
+        d.getDate()
+    ).padStart(2,"0");
+
+    return year + "-" + month + "-" + day;
 }
+
+
+function getMonth(){
+
+    return getToday().substring(0,7);
+
+}
+
+
+/* =========================
+   SAVE DATA
+========================= */
+
+function saveData(){
+
+    localStorage.setItem(
+        "workers",
+        JSON.stringify(workers)
+    );
+
+    localStorage.setItem(
+        "attendance",
+        JSON.stringify(attendance)
+    );
+
+}
+
+
+/* =========================
+   LOGIN SCREEN
+========================= */
 
 function showLogin(type){
 
-    document.getElementById("home").style.display="none";
+    document.getElementById("home")
+    .style.display = "none";
 
     document.getElementById("contractorLogin")
-    .style.display="none";
+    .style.display = "none";
 
     document.getElementById("workerLogin")
-    .style.display="none";
+    .style.display = "none";
 
-    document.getElementById("message").innerHTML="";
+    document.getElementById("message")
+    .innerHTML = "";
 
-    if(type==="contractor"){
+    if(type === "contractor"){
+
         document.getElementById("contractorLogin")
-        .style.display="block";
+        .style.display = "block";
+
     }
 
-    if(type==="worker"){
+    if(type === "worker"){
+
         document.getElementById("workerLogin")
-        .style.display="block";
+        .style.display = "block";
+
     }
+
 }
+
+
+/* =========================
+   HOME
+========================= */
 
 function goHome(){
 
-    document.getElementById("home").style.display="block";
-
     document.getElementById("contractorLogin")
-    .style.display="none";
+    .style.display = "none";
 
     document.getElementById("workerLogin")
-    .style.display="none";
+    .style.display = "none";
 
-    document.getElementById("message").innerHTML="";
+    document.getElementById("home")
+    .style.display = "block";
+
+    document.getElementById("message")
+    .innerHTML = "";
+
 }
+
+
+/* =========================
+   CONTRACTOR LOGIN
+========================= */
 
 function contractorLogin(){
 
     let username =
-    document.getElementById("contractorUser").value;
+        document.getElementById("contractorUser")
+        .value.trim();
 
     let password =
-    document.getElementById("contractorPass").value;
+        document.getElementById("contractorPass")
+        .value;
 
-    if(username==="" || password===""){
+    if(
+        username !== "contractor" ||
+        password !== "1234"
+    ){
 
-        document.getElementById("message").innerHTML=
-        "⚠️ Username और Password भरें";
+        document.getElementById("message")
+        .innerHTML =
+        "❌ गलत Contractor Username या Password";
 
         return;
+
     }
 
     document.getElementById("contractorLogin")
-    .style.display="none";
+    .style.display = "none";
 
-    document.getElementById("message").innerHTML="";
+    document.getElementById("home")
+    .style.display = "none";
 
-    document.getElementById("dashboard")
-    .style.display="block";
+    document.getElementById("contractorDashboard")
+    .style.display = "block";
 
     updateDashboard();
-}
-
-function workerLogin(){
-
-    let username =
-    document.getElementById("workerUser").value.trim();
-
-    let password =
-    document.getElementById("workerPass").value;
-
-    if(username === "" || password === ""){
-        document.getElementById("message").innerHTML =
-        "⚠️ Worker ID और Password भरें";
-        return;
-    }
-
-    let worker = workers.find(w =>
-        w.name.toLowerCase() === username.toLowerCase()
-    );
-
-    if(!worker){
-        document.getElementById("message").innerHTML =
-        "❌ Worker नहीं मिला";
-        return;
-    }
-
-    let today = getToday();
-
-    let days = 0;
-
-    Object.keys(attendance).forEach(date => {
-
-        if(date.substring(0,7) === today.substring(0,7)){
-
-            if(attendance[date].includes(worker.id)){
-                days++;
-            }
-
-        }
-
-    });
-
-    let payment = days * Number(worker.wage);
-
-    document.getElementById("home").style.display = "none";
-    document.getElementById("workerLogin").style.display = "none";
-
-    let box = document.getElementById("workerDashboard");
-
-    if(!box){
-
-        box = document.createElement("div");
-
-        box.id = "workerDashboard";
-
-        document.querySelector(".container")
-        .appendChild(box);
-
-    }
-
-    box.className = "card";
-
-    box.style.display = "block";
-
-    box.innerHTML = `
-
-        <h2>👷 Worker Dashboard</h2>
-
-        <hr>
-
-        <p><b>Worker Name:</b> ${worker.name}</p>
-
-        <p><b>Mobile:</b> ${worker.phone}</p>
-
-        <p><b>Daily Wage:</b> ₹${worker.wage}</p>
-
-        <hr>
-
-        <h3>📅 इस महीने की Attendance</h3>
-
-        <p><b>${days} दिन Present</b></p>
-
-        <h3>💰 इस महीने की Payment</h3>
-
-        <p><b>₹${payment}</b></p>
-
-        <br>
-
-        <button class="dark" onclick="logoutWorker()">
-        Logout
-        </button>
-
-    `;
-
-    document.getElementById("message").innerHTML =
-    "";
 
 }
 
-        document.getElementById("message").innerHTML=
-        "⚠️ Worker ID और Password भरें";
 
-        return;
-    }
+/* =========================
+   ADD WORKER
+========================= */
 
-    document.getElementById("message").innerHTML=
-    "✅ Worker Login Successful!";
-}
-function logoutWorker(){
-
-    let box = document.getElementById("workerDashboard");
-
-    if(box){
-        box.style.display = "none";
-    }
-
-    document.getElementById("home").style.display = "block";
-
-    document.getElementById("workerUser").value = "";
-    document.getElementById("workerPass").value = "";
-
-}
 function addWorker(){
 
     let name =
-    document.getElementById("workerName")
-    .value.trim();
+        document.getElementById("workerName")
+        .value.trim();
 
     let phone =
-    document.getElementById("workerPhone")
-    .value.trim();
+        document.getElementById("workerPhone")
+        .value.trim();
 
     let wage =
-    Number(document.getElementById("workerWage").value);
+        Number(
+            document.getElementById("workerWage")
+            .value
+        );
 
-    if(name==="" || wage<=0){
+    let password =
+        document.getElementById("workerPassword")
+        .value;
 
-        alert("Worker Name और Daily Wage भरें");
+
+    if(
+        name === "" ||
+        phone === "" ||
+        wage <= 0 ||
+        password === ""
+    ){
+
+        alert(
+            "Worker Name, Mobile, Daily Wage और Password भरें"
+        );
+
         return;
+
     }
 
+
+    let alreadyExists =
+        workers.some(w =>
+            w.name.toLowerCase() === name.toLowerCase()
+            ||
+            w.phone === phone
+        );
+
+
+    if(alreadyExists){
+
+        alert("यह Worker पहले से मौजूद है");
+
+        return;
+
+    }
+
+
     let worker = {
-        id:Date.now(),
-        name:name,
-        phone:phone,
-        wage:wage
+
+        id: Date.now(),
+
+        name: name,
+
+        phone: phone,
+
+        wage: wage,
+
+        password: password
+
     };
+
 
     workers.push(worker);
 
     saveData();
 
-    document.getElementById("workerName").value="";
-    document.getElementById("workerPhone").value="";
-    document.getElementById("workerWage").value="";
+    document.getElementById("workerName").value = "";
+
+    document.getElementById("workerPhone").value = "";
+
+    document.getElementById("workerWage").value = "";
+
+    document.getElementById("workerPassword").value = "";
 
     updateDashboard();
 
     alert("✅ Worker Successfully Added!");
+
 }
+
+
+/* =========================
+   MARK ATTENDANCE
+========================= */
 
 function markAttendance(id){
 
-    let today=getToday();
+    let today = getToday();
 
     if(!attendance[today]){
-        attendance[today]=[];
+
+        attendance[today] = [];
+
     }
 
-    if(attendance[today].includes(id)){
 
-        attendance[today] =
-        attendance[today].filter(x=>x!==id);
+    let index =
+        attendance[today].indexOf(id);
 
-    }else{
+
+    if(index === -1){
 
         attendance[today].push(id);
+
     }
+    else{
+
+        attendance[today].splice(index,1);
+
+    }
+
 
     saveData();
 
     updateDashboard();
+
 }
+
+
+/* =========================
+   DELETE WORKER
+========================= */
 
 function deleteWorker(id){
 
-    if(!confirm(
-    "क्या आप इस Worker को Delete करना चाहते हैं?")){
+    let worker =
+        workers.find(w => w.id === id);
+
+    if(!worker){
+
         return;
+
     }
 
+
+    let ok =
+        confirm(
+            worker.name +
+            " को delete करना है?"
+        );
+
+
+    if(!ok){
+
+        return;
+
+    }
+
+
     workers =
-    workers.filter(w=>w.id!==id);
+        workers.filter(w =>
+            w.id !== id
+        );
+
+
+    Object.keys(attendance).forEach(date => {
+
+        attendance[date] =
+            attendance[date].filter(
+                workerId => workerId !== id
+            );
+
+    });
+
 
     saveData();
 
     updateDashboard();
+
 }
+
+
+/* =========================
+   CONTRACTOR DASHBOARD
+========================= */
 
 function updateDashboard(){
 
-    let today=getToday();
+    document.getElementById("today")
+    .innerText = getToday();
 
-    document.getElementById("today").innerText=today;
-
-    let list =
-    document.getElementById("workerList");
-
-    list.innerHTML="";
-
-    let todayList =
-    attendance[today] || [];
-
-    let presentCount=0;
-    let totalPayment=0;
-    let monthAttendance=0;
-
-    workers.forEach(worker=>{
-
-        let isPresent =
-        todayList.includes(worker.id);
-
-        if(isPresent){
-            presentCount++;
-        }
-
-        let card =
-        document.createElement("div");
-
-        card.className="card";
-
-        card.innerHTML=`
-
-        <b>${worker.name}</b><br>
-
-        📱 ${worker.phone || "No Number"}<br>
-
-        💰 Daily Wage: ₹${worker.wage}
-
-        <button class="${isPresent ?
-        "present":"absent"}"
-        onclick="markAttendance(${worker.id})">
-
-        ${isPresent ?
-        "Present ✅":"Absent"}
-
-        </button>
-
-        <button class="delete"
-        onclick="deleteWorker(${worker.id})">
-
-        Delete Worker
-
-        </button>
-        `;
-
-        list.appendChild(card);
-    });
-
-    Object.keys(attendance).forEach(date=>{
-
-        if(date.substring(0,7) ===
-        today.substring(0,7)){
-
-            attendance[date].forEach(id=>{
-
-                monthAttendance++;
-
-                let worker =
-                workers.find(w=>w.id===id);
-
-                if(worker){
-                    totalPayment +=
-                    Number(worker.wage);
-                }
-            });
-        }
-    });
 
     document.getElementById("totalWorkers")
-    .innerText=workers.length;
+    .innerText = workers.length;
+
+
+    let today = getToday();
+
+    let todayList =
+        attendance[today] || [];
+
 
     document.getElementById("todayPresent")
-    .innerText=presentCount;
+    .innerText = todayList.length;
+
+
+    let month = getMonth();
+
+    let totalDays = 0;
+
+    let totalPayment = 0;
+
+
+    workers.forEach(worker => {
+
+        let days = 0;
+
+
+        Object.keys(attendance).forEach(date => {
+
+            if(
+                date.substring(0,7) === month
+                &&
+                attendance[date]
+                .includes(worker.id)
+            ){
+
+                days++;
+
+            }
+
+        });
+
+
+        totalDays += days;
+
+        totalPayment +=
+            days * Number(worker.wage);
+
+    });
+
 
     document.getElementById("monthAttendance")
-    .innerText=monthAttendance;
+    .innerText = totalDays;
+
 
     document.getElementById("totalPayment")
-    .innerText=totalPayment;
+    .innerText = totalPayment;
+
+
+    showWorkerList();
 
     showHistory();
 
     showMonthlyWorkers();
+
 }
+
+
+/* =========================
+   WORKER LIST
+========================= */
+
+function showWorkerList(){
+
+    let box =
+        document.getElementById("workerList");
+
+    box.innerHTML = "";
+
+
+    if(workers.length === 0){
+
+        box.innerHTML =
+            "<p>अभी कोई Worker नहीं है।</p>";
+
+        return;
+
+    }
+
+
+    let today = getToday();
+
+    let todayList =
+        attendance[today] || [];
+
+
+    workers.forEach(worker => {
+
+        let isPresent =
+            todayList.includes(worker.id);
+
+
+        let card =
+            document.createElement("div");
+
+
+        card.className =
+            "worker-card";
+
+
+        card.innerHTML = `
+
+            <h3>👷 ${worker.name}</h3>
+
+            <p>
+                <b>Mobile:</b>
+                ${worker.phone}
+            </p>
+
+            <p>
+                <b>Daily Wage:</b>
+                ₹${worker.wage}
+            </p>
+
+            <p>
+                <b>आज:</b>
+                ${
+                    isPresent
+                    ? '<span class="success">Present ✅</span>'
+                    : '<span class="danger">Absent ❌</span>'
+                }
+            </p>
+
+            <button
+                class="${isPresent ? "absent" : "present"}"
+                onclick="markAttendance(${worker.id})"
+            >
+                ${
+                    isPresent
+                    ? "Mark Absent"
+                    : "Mark Present"
+                }
+            </button>
+
+            <button
+                class="red"
+                onclick="deleteWorker(${worker.id})"
+            >
+                🗑️ Delete Worker
+            </button>
+
+        `;
+
+
+        box.appendChild(card);
+
+    });
+
+}
+
+
+/* =========================
+   ATTENDANCE HISTORY
+========================= */
 
 function showHistory(){
 
-    let today=getToday();
+    let box =
+        document.getElementById("historyList");
 
-    let historyList =
-    document.getElementById("historyList");
+    box.innerHTML = "";
 
-    historyList.innerHTML="";
 
     let dates =
-    Object.keys(attendance)
-    .sort()
-    .reverse();
+        Object.keys(attendance)
+        .sort()
+        .reverse();
 
-    dates.forEach(date=>{
 
-        if(date.substring(0,7)!==
-        today.substring(0,7)){
-            return;
-        }
+    dates.forEach(date => {
 
-        attendance[date].forEach(id=>{
+        attendance[date].forEach(id => {
 
             let worker =
-            workers.find(w=>w.id===id);
+                workers.find(w =>
+                    w.id === id
+                );
+
 
             if(!worker){
+
                 return;
+
             }
 
+
             let row =
-            document.createElement("tr");
+                document.createElement("tr");
 
-            row.innerHTML=`
 
-            <td>${date}</td>
+            row.innerHTML = `
 
-            <td>${worker.name}</td>
+                <td>${date}</td>
 
-            <td>Present ✅</td>
+                <td>${worker.name}</td>
 
-            <td>₹${worker.wage}</td>
+                <td>
+                    <span class="success">
+                    Present ✅
+                    </span>
+                </td>
+
+                <td>
+                    ₹${worker.wage}
+                </td>
 
             `;
 
-            historyList.appendChild(row);
+
+            box.appendChild(row);
+
         });
+
     });
 
-    if(historyList.innerHTML===""){
 
-        historyList.innerHTML=`
+    if(box.innerHTML === ""){
 
-        <tr>
-        <td colspan="4">
-        अभी कोई Attendance History नहीं है
-        </td>
-        </tr>
+        box.innerHTML = `
+
+            <tr>
+                <td colspan="4">
+                    अभी कोई Attendance नहीं है।
+                </td>
+            </tr>
 
         `;
+
     }
+
 }
+
+
+/* =========================
+   MONTHLY WORKERS
+========================= */
 
 function showMonthlyWorkers(){
 
     let box =
-    document.getElementById("monthlyWorkers");
+        document.getElementById(
+            "monthlyWorkers"
+        );
 
-    box.innerHTML="";
+    box.innerHTML = "";
 
-    let today=getToday();
 
-    workers.forEach(worker=>{
+    let month = getMonth();
 
-        let days=0;
 
-        Object.keys(attendance).forEach(date=>{
+    workers.forEach(worker => {
 
-            if(date.substring(0,7)===
-            today.substring(0,7)){
+        let days = 0;
 
-                if(attendance[date]
-                .includes(worker.id)){
 
-                    days++;
-                }
+        Object.keys(attendance).forEach(date => {
+
+            if(
+                date.substring(0,7) === month
+                &&
+                attendance[date]
+                .includes(worker.id)
+            ){
+
+                days++;
+
             }
+
         });
 
+
         let payment =
-        days * Number(worker.wage);
+            days * Number(worker.wage);
+
 
         let card =
-        document.createElement("div");
+            document.createElement("div");
 
-        card.className="card";
 
-        card.innerHTML=`
+        card.className = "card";
 
-        <b>👷 ${worker.name}</b>
 
-        <br>
+        card.innerHTML = `
 
-        Attendance:
-        <b>${days} दिन</b>
+            <b>👷 ${worker.name}</b>
 
-        <br>
+            <p>
+                Attendance:
+                <b>${days} दिन</b>
+            </p>
 
-        Daily Wage:
-        <b>₹${worker.wage}</b>
+            <p>
+                Daily Wage:
+                <b>₹${worker.wage}</b>
+            </p>
 
-        <br>
-
-        Monthly Payment:
-        <b>₹${payment}</b>
+            <p>
+                Monthly Payment:
+                <b>₹${payment}</b>
+            </p>
 
         `;
 
+
         box.appendChild(card);
+
     });
+
 }
 
-function logout(){
 
-    document.getElementById("dashboard")
-    .style.display="none";
+/* =========================
+   WORKER LOGIN
+========================= */
+
+function workerLogin(){
+
+    let username =
+        document.getElementById("workerUser")
+        .value.trim();
+
+    let password =
+        document.getElementById("workerPass")
+        .value;
+
+
+    if(
+        username === "" ||
+        password === ""
+    ){
+
+        document.getElementById("message")
+        .innerHTML =
+        "⚠️ Worker Name/Mobile और Password भरें";
+
+        return;
+
+    }
+
+
+    let worker =
+        workers.find(w =>
+
+            w.name.toLowerCase()
+            === username.toLowerCase()
+
+            ||
+
+            w.phone === username
+
+        );
+
+
+    if(!worker){
+
+        document.getElementById("message")
+        .innerHTML =
+        "❌ Worker नहीं मिला";
+
+        return;
+
+    }
+
+
+    /*
+       पुराने Worker के लिए
+       temporary password 1234
+       रखा गया है।
+       नए Worker में अपना password होगा।
+    */
+
+    let correctPassword =
+        worker.password || "1234";
+
+
+    if(password !== correctPassword){
+
+        document.getElementById("message")
+        .innerHTML =
+        "❌ गलत Password";
+
+        return;
+
+    }
+
 
     document.getElementById("home")
-    .style.display="block";
+    .style.display = "none";
 
-    document.getElementById("contractorUser")
-    .value="";
-
-    document.getElementById("contractorPass")
-    .value="";
+    document.getElementById("workerLogin")
+    .style.display = "none";
 
     document.getElementById("message")
-    .innerHTML="";
+    .innerHTML = "";
+
+
+    document.getElementById("workerDashboard")
+    .style.display = "block";
+
+
+    showWorkerDashboard(worker);
+
 }
 
+
+/* =========================
+   WORKER DASHBOARD
+========================= */
+
+function showWorkerDashboard(worker){
+
+    document.getElementById(
+        "workerDashName"
+    ).innerText = worker.name;
+
+
+    document.getElementById(
+        "workerDashPhone"
+    ).innerText = worker.phone;
+
+
+    document.getElementById(
+        "workerDashWage"
+    ).innerText = worker.wage;
+
+
+    let month = getMonth();
+
+    let days = 0;
+
+
+    Object.keys(attendance).forEach(date => {
+
+        if(
+            date.substring(0,7) === month
+            &&
+            attendance[date]
+            .includes(worker.id)
+        ){
+
+            days++;
+
+        }
+
+    });
+
+
+    let payment =
+        days * Number(worker.wage);
+
+
+    document.getElementById(
+        "workerDashDays"
+    ).innerText = days;
+
+
+    document.getElementById(
+        "workerDashPayment"
+    ).innerText = payment;
+
+
+    let history =
+        document.getElementById(
+            "workerHistory"
+        );
+
+    history.innerHTML = "";
+
+
+    Object.keys(attendance)
+    .sort()
+    .reverse()
+    .forEach(date => {
+
+        if(
+            attendance[date]
+            .includes(worker.id)
+        ){
+
+            let row =
+                document.createElement("tr");
+
+
+            row.innerHTML = `
+
+                <td>${date}</td>
+
+                <td>
+                    <span class="success">
+                    Present ✅
+                    </span>
+                </td>
+
+                <td>
+                    ₹${worker.wage}
+                </td>
+
+            `;
+
+
+            history.appendChild(row);
+
+        }
+
+    });
+
+
+    if(history.innerHTML === ""){
+
+        history.innerHTML = `
+
+            <tr>
+                <td colspan="3">
+                    अभी Attendance नहीं है।
+                </td>
+            </tr>
+
+        `;
+
+    }
+
+}
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+function contractorLogout(){
+
+    document.getElementById(
+        "contractorDashboard"
+    ).style.display = "none";
+
+
+    document.getElementById(
+        "contractorUser"
+    ).value = "";
+
+
+    document.getElementById(
+        "contractorPass"
+    ).value = "";
+
+
+    goHome();
+
+}
+
+
+function workerLogout(){
+
+    document.getElementById(
+        "workerDashboard"
+    ).style.display = "none";
+
+
+    document.getElementById(
+        "workerUser"
+    ).value = "";
+
+
+    document.getElementById(
+        "workerPass"
+    ).value = "";
+
+
+    goHome();
+
+}
+
+
+/* =========================
+   START
+========================= */
+
 document.getElementById("today")
-.innerText=getToday();
+.innerText = getToday();
 
 </script>
 
