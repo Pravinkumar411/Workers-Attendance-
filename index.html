@@ -330,12 +330,99 @@ function contractorLogin(){
 function workerLogin(){
 
     let username =
-    document.getElementById("workerUser").value;
+    document.getElementById("workerUser").value.trim();
 
     let password =
     document.getElementById("workerPass").value;
 
-    if(username==="" || password===""){
+    if(username === "" || password === ""){
+        document.getElementById("message").innerHTML =
+        "⚠️ Worker ID और Password भरें";
+        return;
+    }
+
+    let worker = workers.find(w =>
+        w.name.toLowerCase() === username.toLowerCase()
+    );
+
+    if(!worker){
+        document.getElementById("message").innerHTML =
+        "❌ Worker नहीं मिला";
+        return;
+    }
+
+    let today = getToday();
+
+    let days = 0;
+
+    Object.keys(attendance).forEach(date => {
+
+        if(date.substring(0,7) === today.substring(0,7)){
+
+            if(attendance[date].includes(worker.id)){
+                days++;
+            }
+
+        }
+
+    });
+
+    let payment = days * Number(worker.wage);
+
+    document.getElementById("home").style.display = "none";
+    document.getElementById("workerLogin").style.display = "none";
+
+    let box = document.getElementById("workerDashboard");
+
+    if(!box){
+
+        box = document.createElement("div");
+
+        box.id = "workerDashboard";
+
+        document.querySelector(".container")
+        .appendChild(box);
+
+    }
+
+    box.className = "card";
+
+    box.style.display = "block";
+
+    box.innerHTML = `
+
+        <h2>👷 Worker Dashboard</h2>
+
+        <hr>
+
+        <p><b>Worker Name:</b> ${worker.name}</p>
+
+        <p><b>Mobile:</b> ${worker.phone}</p>
+
+        <p><b>Daily Wage:</b> ₹${worker.wage}</p>
+
+        <hr>
+
+        <h3>📅 इस महीने की Attendance</h3>
+
+        <p><b>${days} दिन Present</b></p>
+
+        <h3>💰 इस महीने की Payment</h3>
+
+        <p><b>₹${payment}</b></p>
+
+        <br>
+
+        <button class="dark" onclick="logoutWorker()">
+        Logout
+        </button>
+
+    `;
+
+    document.getElementById("message").innerHTML =
+    "";
+
+}
 
         document.getElementById("message").innerHTML=
         "⚠️ Worker ID और Password भरें";
@@ -346,7 +433,20 @@ function workerLogin(){
     document.getElementById("message").innerHTML=
     "✅ Worker Login Successful!";
 }
+function logoutWorker(){
 
+    let box = document.getElementById("workerDashboard");
+
+    if(box){
+        box.style.display = "none";
+    }
+
+    document.getElementById("home").style.display = "block";
+
+    document.getElementById("workerUser").value = "";
+    document.getElementById("workerPass").value = "";
+
+}
 function addWorker(){
 
     let name =
