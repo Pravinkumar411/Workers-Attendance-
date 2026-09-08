@@ -580,10 +580,7 @@ function contractorLogin(){
         document.getElementById("contractorPass")
         .value;
 
-    if(
-        username !== "प्रदीप" ||
-        password !== "12345"
-    ){
+    
 
         document.getElementById("message")
         .innerHTML =
@@ -591,7 +588,13 @@ function contractorLogin(){
 
         return;
     }
+username = username.trim().normalize();
+password = password.trim();
 
+if(
+    (username !== "प्रदीप" && username.toLowerCase() !== "pradeep") ||
+    password !== "12345"
+){
     document.getElementById("contractorLogin")
         .style.display = "none";
 
