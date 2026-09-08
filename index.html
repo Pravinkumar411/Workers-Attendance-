@@ -1,215 +1,452 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Workers Attendance</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Workers Attendance</title>
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f6f8;
-      margin: 0;
-      padding: 20px;
-      text-align: center;
-    }
-
-    .container {
-      max-width: 450px;
-      margin: 50px auto;
-      background: white;
-      padding: 30px 20px;
-      border-radius: 15px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    }
-
-    h1 {
-      margin-bottom: 10px;
-    }
-
-    p {
-      color: #555;
-      margin-bottom: 30px;
-    }
-
-    button {
-      width: 100%;
-      padding: 15px;
-      margin: 10px 0;
-      border: none;
-      border-radius: 8px;
-      font-size: 18px;
-      cursor: pointer;
-    }
-
-    .contractor {
-      background: #1976d2;
-      color: white;
-    }
-
-    .worker {
-      background: #2e7d32;
-      color: white;
-    }
-
-    .login-box {
-      display: none;
-      margin-top: 25px;
-      text-align: left;
-    }
-
-    input {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 13px;
-      margin: 8px 0;
-      border: 1px solid #ccc;
-      border-radius: 7px;
-      font-size: 16px;
-    }
-
-    .login-btn {
-      background: #333;
-      color: white;
-    }
-
-    .back-btn {
-      background: #ddd;
-      color: #222;
-    }
-
-    #message {
-      margin-top: 15px;
-      font-weight: bold;
-      text-align: center;
-    }
-  </style>
+<style>
+body{
+    font-family:Arial,sans-serif;
+    background:#f4f6f8;
+    margin:0;
+    padding:15px;
+}
+.container{
+    max-width:650px;
+    margin:auto;
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 3px 12px #ccc;
+}
+h1,h2{
+    text-align:center;
+}
+.subtitle{
+    text-align:center;
+    color:#666;
+}
+button{
+    width:100%;
+    padding:13px;
+    margin:6px 0;
+    border:0;
+    border-radius:8px;
+    font-size:16px;
+    cursor:pointer;
+}
+.contractor{
+    background:#1976d2;
+    color:white;
+}
+.worker{
+    background:#2e7d32;
+    color:white;
+}
+.dark{
+    background:#333;
+    color:white;
+}
+.red{
+    background:#d32f2f;
+    color:white;
+}
+input{
+    width:100%;
+    box-sizing:border-box;
+    padding:12px;
+    margin:6px 0;
+    border:1px solid #bbb;
+    border-radius:7px;
+    font-size:16px;
+}
+.login-box,.dashboard{
+    display:none;
+}
+.card{
+    background:#f8f9fa;
+    padding:15px;
+    margin:10px 0;
+    border-radius:10px;
+    border:1px solid #ddd;
+}
+.worker-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:8px;
+}
+.present{
+    background:#2e7d32;
+    color:white;
+    width:auto;
+    padding:9px 14px;
+}
+.absent{
+    background:#777;
+    color:white;
+    width:auto;
+    padding:9px 14px;
+}
+.delete{
+    background:#d32f2f;
+    color:white;
+    width:auto;
+    padding:9px 12px;
+}
+.summary{
+    background:#e3f2fd;
+    padding:15px;
+    border-radius:10px;
+    margin:10px 0;
+}
+.message{
+    text-align:center;
+    font-weight:bold;
+    margin:10px;
+}
+</style>
 </head>
 
 <body>
 
-  <div class="container">
+<div class="container">
 
-    <h1>Workers Attendance</h1>
+<h1>Workers Attendance</h1>
+<p class="subtitle">Worker Attendance और Payment Management</p>
 
-    <p>Worker Attendance और Payment Management</p>
-
+<!-- HOME -->
+<div id="home">
     <button class="contractor" onclick="showLogin('contractor')">
-      Contractor Login
+        Contractor Login
     </button>
 
     <button class="worker" onclick="showLogin('worker')">
-      Worker Login
+        Worker Login
     </button>
+</div>
 
+<!-- CONTRACTOR LOGIN -->
+<div id="contractorLogin" class="login-box">
 
-    <div id="contractorLogin" class="login-box">
+<h2>Contractor Login</h2>
 
-      <h2>Contractor Login</h2>
+<input id="contractorUser" type="text"
+placeholder="Contractor Username">
 
-      <input type="text" id="contractorUser" placeholder="Contractor Username">
+<input id="contractorPass" type="password"
+placeholder="Password">
 
-      <input type="password" id="contractorPass" placeholder="Password">
+<button class="contractor" onclick="contractorLogin()">
+Login
+</button>
 
-      <button class="login-btn" onclick="login('contractor')">
-        Login
-      </button>
+<button class="dark" onclick="goHome()">
+Back
+</button>
 
-      <button class="back-btn" onclick="goBack()">
-        Back
-      </button>
+</div>
 
-    </div>
+<!-- WORKER LOGIN -->
+<div id="workerLogin" class="login-box">
 
+<h2>Worker Login</h2>
 
-    <div id="workerLogin" class="login-box">
+<input id="workerUser" type="text"
+placeholder="Worker ID">
 
-      <h2>Worker Login</h2>
+<input id="workerPass" type="password"
+placeholder="Password">
 
-      <input type="text" id="workerUser" placeholder="Worker Username">
+<button class="worker" onclick="workerLogin()">
+Login
+</button>
 
-      <input type="password" id="workerPass" placeholder="Password">
+<button class="dark" onclick="goHome()">
+Back
+</button>
 
-      <button class="login-btn" onclick="login('worker')">
-        Login
-      </button>
+</div>
 
-      <button class="back-btn" onclick="goBack()">
-        Back
-      </button>
+<div id="message" class="message"></div>
 
-    </div>
+<!-- CONTRACTOR DASHBOARD -->
+<div id="dashboard" class="dashboard">
 
-    <div id="message"></div>
+<h2>🏗️ Contractor Dashboard</h2>
 
-  </div>
+<div class="summary">
+<b>आज की तारीख:</b>
+<span id="today"></span>
+</div>
 
+<h3>➕ Worker Add करें</h3>
 
-  <script>
+<input id="workerName" type="text"
+placeholder="Worker का नाम">
 
-    function showLogin(type) {
+<input id="workerPhone" type="text"
+placeholder="Mobile Number">
 
-      document.getElementById("contractorLogin").style.display = "none";
-      document.getElementById("workerLogin").style.display = "none";
+<input id="workerWage" type="number"
+placeholder="Daily Wage ₹">
 
-      document.getElementById("message").innerHTML = "";
+<button class="contractor" onclick="addWorker()">
+Add Worker
+</button>
 
-      if (type === "contractor") {
-        document.getElementById("contractorLogin").style.display = "block";
-      }
+<h3>👷 Worker List</h3>
 
-      if (type === "worker") {
-        document.getElementById("workerLogin").style.display = "block";
-      }
+<div id="workerList"></div>
+
+<h3>💰 Payment Summary</h3>
+
+<div class="summary">
+<p>Total Workers: <b id="totalWorkers">0</b></p>
+<p>आज Present: <b id="todayPresent">0</b></p>
+<p>इस महीने की Attendance: <b id="monthAttendance">0</b></p>
+<p>कुल Payment: <b>₹<span id="totalPayment">0</span></b></p>
+</div>
+
+<button class="red" onclick="logout()">
+Logout
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+let workers = JSON.parse(localStorage.getItem("workers")) || [];
+let attendance = JSON.parse(localStorage.getItem("attendance")) || {};
+
+function saveData(){
+    localStorage.setItem("workers", JSON.stringify(workers));
+    localStorage.setItem("attendance", JSON.stringify(attendance));
+}
+
+function showLogin(type){
+
+    document.getElementById("home").style.display="none";
+    document.getElementById("contractorLogin").style.display="none";
+    document.getElementById("workerLogin").style.display="none";
+    document.getElementById("message").innerHTML="";
+
+    if(type==="contractor"){
+        document.getElementById("contractorLogin").style.display="block";
     }
 
-
-    function goBack() {
-
-      document.getElementById("contractorLogin").style.display = "none";
-      document.getElementById("workerLogin").style.display = "none";
-
-      document.getElementById("message").innerHTML = "";
+    if(type==="worker"){
+        document.getElementById("workerLogin").style.display="block";
     }
+}
 
+function goHome(){
 
-    function login(type) {
+    document.getElementById("home").style.display="block";
+    document.getElementById("contractorLogin").style.display="none";
+    document.getElementById("workerLogin").style.display="none";
+    document.getElementById("message").innerHTML="";
+}
 
-      let username;
-      let password;
+function contractorLogin(){
 
-      if (type === "contractor") {
-        username = document.getElementById("contractorUser").value;
-        password = document.getElementById("contractorPass").value;
-      }
+    let username=document.getElementById("contractorUser").value;
+    let password=document.getElementById("contractorPass").value;
 
-      if (type === "worker") {
-        username = document.getElementById("workerUser").value;
-        password = document.getElementById("workerPass").value;
-      }
-
-      if (username === "" || password === "") {
-
-        document.getElementById("message").innerHTML =
-          "⚠️ Username और Password दोनों भरें।";
-
+    if(username==="" || password===""){
+        document.getElementById("message").innerHTML=
+        "⚠️ Username और Password भरें";
         return;
-      }
-
-      if (type === "contractor") {
-
-        document.getElementById("message").innerHTML =
-          "✅ Contractor Login Successful!";
-
-      } else {
-
-        document.getElementById("message").innerHTML =
-          "✅ Worker Login Successful!";
-
-      }
     }
 
-  </script>
+    document.getElementById("contractorLogin").style.display="none";
+    document.getElementById("message").innerHTML="";
+
+    document.getElementById("dashboard").style.display="block";
+
+    updateDashboard();
+}
+
+function workerLogin(){
+
+    let username=document.getElementById("workerUser").value;
+    let password=document.getElementById("workerPass").value;
+
+    if(username==="" || password===""){
+        document.getElementById("message").innerHTML=
+        "⚠️ Worker ID और Password भरें";
+        return;
+    }
+
+    document.getElementById("message").innerHTML=
+    "✅ Worker Login Successful!";
+}
+
+function getToday(){
+
+    let d=new Date();
+
+    let year=d.getFullYear();
+    let month=String(d.getMonth()+1).padStart(2,"0");
+    let day=String(d.getDate()).padStart(2,"0");
+
+    return year+"-"+month+"-"+day;
+}
+
+function addWorker(){
+
+    let name=document.getElementById("workerName").value.trim();
+    let phone=document.getElementById("workerPhone").value.trim();
+    let wage=Number(document.getElementById("workerWage").value);
+
+    if(name==="" || wage<=0){
+        alert("Worker Name और Daily Wage भरें");
+        return;
+    }
+
+    let worker={
+        id:Date.now(),
+        name:name,
+        phone:phone,
+        wage:wage
+    };
+
+    workers.push(worker);
+
+    saveData();
+
+    document.getElementById("workerName").value="";
+    document.getElementById("workerPhone").value="";
+    document.getElementById("workerWage").value="";
+
+    updateDashboard();
+
+    alert("✅ Worker Successfully Added!");
+}
+
+function markAttendance(id){
+
+    let today=getToday();
+
+    if(!attendance[today]){
+        attendance[today]=[];
+    }
+
+    if(attendance[today].includes(id)){
+        attendance[today]=
+        attendance[today].filter(x=>x!==id);
+    }else{
+        attendance[today].push(id);
+    }
+
+    saveData();
+    updateDashboard();
+}
+
+function deleteWorker(id){
+
+    if(!confirm("क्या आप इस Worker को Delete करना चाहते हैं?")){
+        return;
+    }
+
+    workers=workers.filter(w=>w.id!==id);
+
+    saveData();
+
+    updateDashboard();
+}
+
+function updateDashboard(){
+
+    document.getElementById("today").innerText=getToday();
+
+    let list=document.getElementById("workerList");
+
+    list.innerHTML="";
+
+    let today=getToday();
+
+    let todayList=attendance[today] || [];
+
+    let presentCount=0;
+    let totalPayment=0;
+    let monthAttendance=0;
+
+    workers.forEach(worker=>{
+
+        let isPresent=todayList.includes(worker.id);
+
+        if(isPresent){
+            presentCount++;
+        }
+
+        let card=document.createElement("div");
+        card.className="card";
+
+        card.innerHTML=`
+        <div class="worker-row">
+            <div>
+                <b>${worker.name}</b><br>
+                📱 ${worker.phone || "No Number"}<br>
+                💰 Daily Wage: ₹${worker.wage}
+            </div>
+
+            <button class="${isPresent ? "present":"absent"}"
+            onclick="markAttendance(${worker.id})">
+            ${isPresent ? "Present ✅":"Absent"}
+            </button>
+        </div>
+
+        <button class="delete"
+        onclick="deleteWorker(${worker.id})">
+        Delete Worker
+        </button>
+        `;
+
+        list.appendChild(card);
+    });
+
+    Object.keys(attendance).forEach(date=>{
+
+        if(date.substring(0,7)===today.substring(0,7)){
+
+            attendance[date].forEach(id=>{
+
+                monthAttendance++;
+
+                let worker=workers.find(w=>w.id===id);
+
+                if(worker){
+                    totalPayment += Number(worker.wage);
+                }
+            });
+        }
+    });
+
+    document.getElementById("totalWorkers").innerText=workers.length;
+    document.getElementById("todayPresent").innerText=presentCount;
+    document.getElementById("monthAttendance").innerText=monthAttendance;
+    document.getElementById("totalPayment").innerText=totalPayment;
+}
+
+function logout(){
+
+    document.getElementById("dashboard").style.display="none";
+
+    document.getElementById("home").style.display="block";
+
+    document.getElementById("contractorUser").value="";
+    document.getElementById("contractorPass").value="";
+
+    document.getElementById("message").innerHTML="";
+}
+
+document.getElementById("today").innerText=getToday();
+
+</script>
 
 </body>
 </html>
