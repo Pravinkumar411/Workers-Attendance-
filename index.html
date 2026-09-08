@@ -581,8 +581,8 @@ function contractorLogin(){
         .value;
 
     if(
-        username !== "contractor" ||
-        password !== "1234"
+        username !== "प्रदीप" ||
+        password !== "12345"
     ){
 
         document.getElementById("message")
@@ -590,22 +590,19 @@ function contractorLogin(){
         "❌ गलत Contractor Username या Password";
 
         return;
-
     }
 
     document.getElementById("contractorLogin")
-    .style.display = "none";
+        .style.display = "none";
 
     document.getElementById("home")
-    .style.display = "none";
+        .style.display = "none";
 
     document.getElementById("contractorDashboard")
-    .style.display = "block";
+        .style.display = "block";
 
     updateDashboard();
-
 }
-
 
 /* =========================
    ADD WORKER
