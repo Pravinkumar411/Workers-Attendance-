@@ -2,10 +2,18 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
 <title>Workers Attendance</title>
 
 <style>
+
+/* =========================
+   BASIC
+========================= */
+
 *{
     box-sizing:border-box;
 }
@@ -15,6 +23,7 @@ body{
     background:#f4f6f8;
     margin:0;
     padding:15px;
+    color:#222;
 }
 
 .container{
@@ -35,6 +44,10 @@ h1,h2{
     color:#666;
 }
 
+/* =========================
+   BUTTON
+========================= */
+
 button{
     width:100%;
     padding:13px;
@@ -45,38 +58,43 @@ button{
     cursor:pointer;
 }
 
-.contractor{
+button:active{
+    transform:scale(.98);
+}
+
+.login-btn{
     background:#1976d2;
     color:white;
 }
 
-.worker{
+.add-btn{
+    background:#1976d2;
+    color:white;
+}
+
+.present-btn{
     background:#2e7d32;
     color:white;
 }
 
-.dark{
-    background:#333;
-    color:white;
-}
-
-.red{
+.absent-btn{
     background:#d32f2f;
     color:white;
 }
 
-.green{
-    background:#2e7d32;
+.logout-btn{
+    background:#555;
     color:white;
 }
 
-.card{
-    background:#f8f9fa;
-    padding:15px;
-    margin:10px 0;
-    border-radius:10px;
-    border:1px solid #ddd;
+.reset-btn{
+    background:#ff9800;
+    color:white;
 }
+
+/* =========================
+   INPUT
+========================= */
 
 input{
     width:100%;
@@ -87,22 +105,41 @@ input{
     font-size:16px;
 }
 
+/* =========================
+   SCREENS
+========================= */
+
 .login-box,
 .dashboard{
     display:none;
 }
 
+.login-box.active,
+.dashboard.active{
+    display:block;
+}
+
+/* =========================
+   MESSAGE
+========================= */
+
 .message{
     text-align:center;
     font-weight:bold;
     margin:10px 0;
+    min-height:20px;
 }
 
-.summary{
-    background:#e3f2fd;
+/* =========================
+   CARDS
+========================= */
+
+.card{
+    background:#f8f9fa;
     padding:15px;
-    border-radius:10px;
     margin:10px 0;
+    border-radius:10px;
+    border:1px solid #ddd;
 }
 
 .worker-card{
@@ -113,51 +150,153 @@ input{
     border:1px solid #ddd;
 }
 
+.worker-name{
+    font-size:18px;
+    font-weight:bold;
+    margin-bottom:8px;
+}
+
+.worker-info{
+    color:#666;
+    font-size:14px;
+}
+
+/* =========================
+   SUMMARY
+========================= */
+
+.summary{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+    margin:15px 0;
+}
+
+.summary-box{
+    padding:15px 5px;
+    text-align:center;
+    border-radius:10px;
+    color:white;
+}
+
+.total{
+    background:#1976d2;
+}
+
 .present{
     background:#2e7d32;
-    color:white;
 }
 
 .absent{
     background:#d32f2f;
-    color:white;
 }
 
-.small{
-    font-size:14px;
+.summary-number{
+    font-size:25px;
+    font-weight:bold;
+}
+
+.summary-title{
+    font-size:13px;
+}
+
+/* =========================
+   ATTENDANCE STATUS
+========================= */
+
+.status{
+    padding:8px;
+    border-radius:7px;
+    text-align:center;
+    margin:8px 0;
+    font-weight:bold;
+}
+
+.status-present{
+    background:#c8e6c9;
+    color:#1b5e20;
+}
+
+.status-absent{
+    background:#ffcdd2;
+    color:#b71c1c;
+}
+
+.status-none{
+    background:#eeeeee;
     color:#555;
 }
 
-table{
-    width:100%;
-    border-collapse:collapse;
-    margin-top:10px;
-}
+/* =========================
+   DATE
+========================= */
 
-th,td{
-    border:1px solid #ddd;
-    padding:8px;
+.date-box{
     text-align:center;
-    font-size:14px;
+    font-weight:bold;
+    margin:10px 0;
+    color:#444;
 }
 
-th{
-    background:#eeeeee;
+/* =========================
+   DARK MODE
+========================= */
+
+.dark{
+    background:#222;
+    color:white;
 }
 
-hr{
-    border:0;
-    border-top:1px solid #ddd;
-    margin:18px 0;
+.dark .container{
+    background:#333;
+    color:white;
 }
 
-.success{
-    color:#2e7d32;
+.dark .card,
+.dark .worker-card{
+    background:#444;
+    border-color:#555;
 }
 
-.danger{
-    color:#d32f2f;
+.dark input{
+    background:#444;
+    color:white;
+    border-color:#777;
 }
+
+.dark .subtitle,
+.dark .worker-info{
+    color:#ccc;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:500px){
+
+    body{
+        padding:8px;
+    }
+
+    .container{
+        padding:15px;
+    }
+
+    .summary{
+        grid-template-columns:1fr 1fr 1fr;
+    }
+
+    .summary-box{
+        padding:12px 3px;
+    }
+
+    .summary-number{
+        font-size:21px;
+    }
+
+}
+
 </style>
 </head>
 
@@ -165,124 +304,531 @@ hr{
 
 <div class="container">
 
-<h1>Workers Attendance</h1>
+<!-- =========================
+     LOGIN SCREEN
+========================= -->
 
-<p class="subtitle">
-Worker Attendance और Payment Management
-</p>
+<div id="loginBox" class="login-box active">
 
+    <h1>👷 Workers Attendance</h1>
 
-<!-- HOME -->
-
-<div id="home">
-
-    <button
-        class="contractor"
-        onclick="showLogin('contractor')"
-    >
-        Contractor Login
-    </button>
-
-    <button
-        class="worker"
-        onclick="showLogin('worker')"
-    >
-        Worker Login
-    </button>
-
-</div>
-
-
-<!-- CONTRACTOR LOGIN -->
-
-<div id="contractorLogin" class="login-box">
-
-    <h2>👷 Contractor Login</h2>
+    <p class="subtitle">
+        Worker Attendance Management System
+    </p>
 
     <input
-        id="contractorUser"
         type="text"
+        id="username"
         placeholder="Username"
     >
 
     <input
-        id="contractorPass"
         type="password"
+        id="password"
         placeholder="Password"
     >
 
     <button
-        class="contractor"
-        onclick="contractorLogin()"
-    >
+        class="login-btn"
+        onclick="login()">
         Login
     </button>
 
-    <button
-        class="dark"
-        onclick="goHome()"
-    >
-        Back
-    </button>
+    <div id="loginMessage" class="message"></div>
+
+    <p style="text-align:center;color:#777;font-size:13px;">
+        Demo Login: admin / 1234
+    </p>
 
 </div>
 
 
-<!-- WORKER LOGIN -->
+<!-- =========================
+     DASHBOARD
+========================= -->
 
-<div id="workerLogin" class="login-box">
+<div id="dashboard" class="dashboard">
 
-    <h2>Worker Login</h2>
+    <h1>👷 Workers Attendance</h1>
 
-    <input
-        id="workerUser"
-        type="text"
-        placeholder="Worker Name या Mobile"
-    >
+    <div class="date-box">
+        📅 <span id="currentDate"></span>
+    </div>
 
-    <input
-        id="workerPass"
-        type="password"
-        placeholder="Password"
-    >
-
-    <button
-        class="worker"
-        onclick="workerLogin()"
-    >
-        Login
-    </button>
-
-    <button
-        class="dark"
-        onclick="goHome()"
-    >
-        Back
-    </button>
-
-</div>
-
-
-<div id="message" class="message"></div>
-
-
-<!-- CONTRACTOR DASHBOARD -->
-
-<div id="contractorDashboard" class="dashboard">
-
-    <h2>👷 Contractor Dashboard</h2>
+    <!-- SUMMARY -->
 
     <div class="summary">
 
-        <b>आज की तारीख:</b>
-        <span id="today"></span>
+        <div class="summary-box total">
+            <div class="summary-number"
+                 id="totalWorkers">
+                0
+            </div>
 
-        <hr>
+            <div class="summary-title">
+                Total
+            </div>
+        </div>
 
-        <b>Total Workers:</b>
-        <span id="totalWorkers">0</span>
+        <div class="summary-box present">
+            <div class="summary-number"
+                 id="presentWorkers">
+                0
+            </div>
 
-        <br><br>
+            <div class="summary-title">
+                Present
+            </div>
+        </div>
 
-        <b>आज Present:</b>
-        <span id="todayPresent
+        <div class="summary-box absent">
+            <div class="summary-number"
+                 id="absentWorkers">
+                0
+            </div>
+
+            <div class="summary-title">
+                Absent
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- ADD WORKER -->
+
+    <div class="card">
+
+        <h2>➕ Add Worker</h2>
+
+        <input
+            type="text"
+            id="workerName"
+            placeholder="Worker Name"
+        >
+
+        <input
+            type="text"
+            id="workerId"
+            placeholder="Worker ID"
+        >
+
+        <button
+            class="add-btn"
+            onclick="addWorker()">
+            Add Worker
+        </button>
+
+    </div>
+
+
+    <!-- WORKERS -->
+
+    <h2>👷 Worker List</h2>
+
+    <div id="workerList"></div>
+
+
+    <!-- CONTROLS -->
+
+    <button
+        class="reset-btn"
+        onclick="resetAttendance()">
+        🔄 Reset Today's Attendance
+    </button>
+
+    <button
+        class="logout-btn"
+        onclick="logout()">
+        🚪 Logout
+    </button>
+
+    <button
+        onclick="toggleDarkMode()">
+        🌙 Dark Mode
+    </button>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* =========================
+   DATA
+========================= */
+
+let workers = JSON.parse(
+    localStorage.getItem("workers")
+) || [
+
+    {
+        id: "W001",
+        name: "Ramesh",
+        attendance: "none"
+    },
+
+    {
+        id: "W002",
+        name: "Suresh",
+        attendance: "none"
+    },
+
+    {
+        id: "W003",
+        name: "Amit",
+        attendance: "none"
+    }
+
+];
+
+
+/* =========================
+   LOGIN
+========================= */
+
+function login(){
+
+    const username =
+        document.getElementById("username").value.trim();
+
+    const password =
+        document.getElementById("password").value.trim();
+
+    const message =
+        document.getElementById("loginMessage");
+
+
+    if(username === "admin" && password === "1234"){
+
+        document.getElementById("loginBox")
+            .classList.remove("active");
+
+        document.getElementById("dashboard")
+            .classList.add("active");
+
+        message.innerText = "";
+
+        updateDate();
+        renderWorkers();
+
+    }
+    else{
+
+        message.style.color = "#d32f2f";
+
+        message.innerText =
+            "❌ गलत Username या Password";
+
+    }
+
+}
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+function logout(){
+
+    document.getElementById("dashboard")
+        .classList.remove("active");
+
+    document.getElementById("loginBox")
+        .classList.add("active");
+
+    document.getElementById("username").value = "";
+    document.getElementById("password").value = "";
+
+}
+
+
+/* =========================
+   DATE
+========================= */
+
+function updateDate(){
+
+    const date = new Date();
+
+    const options = {
+        day:"2-digit",
+        month:"long",
+        year:"numeric"
+    };
+
+    document.getElementById("currentDate")
+        .innerText =
+        date.toLocaleDateString("hi-IN", options);
+
+}
+
+
+/* =========================
+   SAVE DATA
+========================= */
+
+function saveWorkers(){
+
+    localStorage.setItem(
+        "workers",
+        JSON.stringify(workers)
+    );
+
+}
+
+
+/* =========================
+   ADD WORKER
+========================= */
+
+function addWorker(){
+
+    const name =
+        document.getElementById("workerName")
+        .value.trim();
+
+    const id =
+        document.getElementById("workerId")
+        .value.trim();
+
+
+    if(name === "" || id === ""){
+
+        alert("Worker Name और Worker ID डालें।");
+        return;
+
+    }
+
+
+    const alreadyExists =
+        workers.some(worker => worker.id === id);
+
+
+    if(alreadyExists){
+
+        alert("यह Worker ID पहले से मौजूद है।");
+        return;
+
+    }
+
+
+    workers.push({
+
+        id:id,
+        name:name,
+        attendance:"none"
+
+    });
+
+
+    saveWorkers();
+
+    document.getElementById("workerName").value = "";
+    document.getElementById("workerId").value = "";
+
+    renderWorkers();
+
+}
+
+
+/* =========================
+   ATTENDANCE
+========================= */
+
+function markAttendance(index,status){
+
+    workers[index].attendance = status;
+
+    saveWorkers();
+
+    renderWorkers();
+
+}
+
+
+/* =========================
+   RENDER WORKERS
+========================= */
+
+function renderWorkers(){
+
+    const list =
+        document.getElementById("workerList");
+
+    list.innerHTML = "";
+
+
+    workers.forEach((worker,index)=>{
+
+        let statusHTML = "";
+
+        if(worker.attendance === "present"){
+
+            statusHTML = `
+                <div class="status status-present">
+                    ✅ Present
+                </div>
+            `;
+
+        }
+        else if(worker.attendance === "absent"){
+
+            statusHTML = `
+                <div class="status status-absent">
+                    ❌ Absent
+                </div>
+            `;
+
+        }
+        else{
+
+            statusHTML = `
+                <div class="status status-none">
+                    ⏳ Attendance Not Marked
+                </div>
+            `;
+
+        }
+
+
+        const card = document.createElement("div");
+
+        card.className = "worker-card";
+
+
+        card.innerHTML = `
+
+            <div class="worker-name">
+                👷 ${worker.name}
+            </div>
+
+            <div class="worker-info">
+                Worker ID: ${worker.id}
+            </div>
+
+            ${statusHTML}
+
+            <button
+                class="present-btn"
+                onclick="markAttendance(${index},'present')">
+                ✅ Present
+            </button>
+
+            <button
+                class="absent-btn"
+                onclick="markAttendance(${index},'absent')">
+                ❌ Absent
+            </button>
+
+        `;
+
+
+        list.appendChild(card);
+
+    });
+
+
+    updateSummary();
+
+}
+
+
+/* =========================
+   SUMMARY
+========================= */
+
+function updateSummary(){
+
+    const total = workers.length;
+
+    const present =
+        workers.filter(
+            worker => worker.attendance === "present"
+        ).length;
+
+    const absent =
+        workers.filter(
+            worker => worker.attendance === "absent"
+        ).length;
+
+
+    document.getElementById("totalWorkers")
+        .innerText = total;
+
+    document.getElementById("presentWorkers")
+        .innerText = present;
+
+    document.getElementById("absentWorkers")
+        .innerText = absent;
+
+}
+
+
+/* =========================
+   RESET ATTENDANCE
+========================= */
+
+function resetAttendance(){
+
+    const confirmReset =
+        confirm(
+            "क्या आप आज की पूरी attendance reset करना चाहते हैं?"
+        );
+
+
+    if(!confirmReset){
+        return;
+    }
+
+
+    workers.forEach(worker => {
+
+        worker.attendance = "none";
+
+    });
+
+
+    saveWorkers();
+
+    renderWorkers();
+
+}
+
+
+/* =========================
+   DARK MODE
+========================= */
+
+function toggleDarkMode(){
+
+    document.body.classList.toggle("dark");
+
+    const dark =
+        document.body.classList.contains("dark");
+
+    localStorage.setItem(
+        "darkMode",
+        dark
+    );
+
+}
+
+
+/* =========================
+   LOAD DARK MODE
+========================= */
+
+if(
+    localStorage.getItem("darkMode") === "true"
+){
+
+    document.body.classList.add("dark");
+
+}
+
+</script>
+
+</body>
+</html>
